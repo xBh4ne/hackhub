@@ -1,0 +1,2175 @@
+{
+  "info": {
+    "_postman_id": "da380f16-424d-4c64-ab35-a14356bfa075",
+    "name": "hack-hub",
+    "description": "Collezione Postman di \"_**HTTP Requests**_\" per HackHub, piattaforma web per la gestione degli hackathon.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "39601365",
+    "_collection_link": "https://go.postman.co/collection/39601365-da380f16-424d-4c64-ab35-a14356bfa075?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Utente",
+      "item": [
+        {
+          "name": "Invito",
+          "item": [
+            {
+              "name": "Accetta Invito",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/inviti/5/accetta",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "inviti",
+                    "5",
+                    "accetta"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Rifiuta Invito",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/inviti/5/rifiuta",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "inviti",
+                    "5",
+                    "rifiuta"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Visualizza inviti personali pendenti",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const loginRequest = {\r",
+                      "        url: pm.variables.replaceIn(\"{{LOGIN_URL}}\"),\r",
+                      "        method: \"POST\",\r",
+                      "        header: {\r",
+                      "            \"Content-Type\": \"application/json\"\r",
+                      "        },\r",
+                      "        body: {\r",
+                      "            mode: \"raw\",\r",
+                      "            raw: JSON.stringify({\r",
+                      "                username: pm.variables.replaceIn(\"{{USER_USERNAME}}\"),\r",
+                      "                password: pm.variables.replaceIn(\"{{USER_PASSWORD}}\")\r",
+                      "            })\r",
+                      "        }\r",
+                      "    };\r",
+                      "\r",
+                      "    pm.sendRequest(loginRequest, (error, response) => {\r",
+                      "        if (error) {\r",
+                      "            console.error(\"Errore durante il login:\", error);\r",
+                      "            return;\r",
+                      "        }\r",
+                      "\r",
+                      "        if (response.code === 200) {\r",
+                      "            const json = response.json();\r",
+                      "\r",
+                      "            pm.collectionVariables.set(\"USER_ACCESS_TOKEN\", json.accessToken);\r",
+                      "\r",
+                      "            const expiryTime = Date.now() + (parseInt(json.expiration) * 1000);\r",
+                      "            pm.collectionVariables.set(\"USER_TOKEN_EXPIRATION\", expiryTime);\r",
+                      "\r",
+                      "            console.log(\"Login OK, token salvato. Scade tra \" + (parseInt(json.expiration) / 60) + \" minuti.\");\r",
+                      "        } else {\r",
+                      "            console.error(\"Login fallito:\", response.status, response.text());\r",
+                      "        }\r",
+                      "    });"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/utente/inviti",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "utente",
+                    "inviti"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Hackathon",
+          "item": [
+            {
+              "name": "RichiestaSupporto",
+              "item": [
+                {
+                  "name": "Richiesta di supporto",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"oggetto\": \"Ho paura dei gatti.\",\r\n  \"descrizione\": \"Aiuto sono pieno di gatti.\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/richieste-supporto/hackathon/1/mentore/10",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "richieste-supporto",
+                        "hackathon",
+                        "1",
+                        "mentore",
+                        "10"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Visualizza richieste di supporto del team",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/team/richieste-supporto",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "team",
+                        "richieste-supporto"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Lista Hackathons",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/hackathons",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "hackathons"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Iscrivi team",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/hackathons/1/iscrivi",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "hackathons",
+                    "1",
+                    "iscrivi"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Invia sottomissione",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"contenuto\": \"Sottomissione per vedere se si elimina con il team\",\r\n  \"hackathonId\": 1\r\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/sottomissioni/send",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "sottomissioni",
+                    "send"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Aggiorna sottomissione",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"contenuto\": \"Prova Edited\",\r\n  \"hackathonId\": 1\r\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/sottomissioni/update",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "sottomissioni",
+                    "update"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Visualizza sottomissioni del team",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/team/sottomissioni",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "team",
+                    "sottomissioni"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Team",
+          "item": [
+            {
+              "name": "Invito",
+              "item": [
+                {
+                  "name": "Visualizza inviti pendenti del proprio team",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const loginRequest = {\r",
+                          "        url: pm.variables.replaceIn(\"{{LOGIN_URL}}\"),\r",
+                          "        method: \"POST\",\r",
+                          "        header: {\r",
+                          "            \"Content-Type\": \"application/json\"\r",
+                          "        },\r",
+                          "        body: {\r",
+                          "            mode: \"raw\",\r",
+                          "            raw: JSON.stringify({\r",
+                          "                username: pm.variables.replaceIn(\"{{USER_USERNAME}}\"),\r",
+                          "                password: pm.variables.replaceIn(\"{{USER_PASSWORD}}\")\r",
+                          "            })\r",
+                          "        }\r",
+                          "    };\r",
+                          "\r",
+                          "    pm.sendRequest(loginRequest, (error, response) => {\r",
+                          "        if (error) {\r",
+                          "            console.error(\"Errore durante il login:\", error);\r",
+                          "            return;\r",
+                          "        }\r",
+                          "\r",
+                          "        if (response.code === 200) {\r",
+                          "            const json = response.json();\r",
+                          "\r",
+                          "            pm.collectionVariables.set(\"ACCESS_TOKEN\", json.accessToken);\r",
+                          "            console.log(\"Login OK, token salvato. Scade tra \" + (parseInt(json.expiration) / 60) + \" minuti.\");\r",
+                          "        } else {\r",
+                          "            console.error(\"Login fallito:\", response.status, response.text());\r",
+                          "        }\r",
+                          "    });"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/team/inviti",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "team",
+                        "inviti"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Invita un utente nel team",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"usernameUtente\": \"utente13\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/inviti",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "inviti"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Abbandona il proprio team",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/team/esci",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "team",
+                    "esci"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Visualizza il proprio team",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/team",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "team"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Crea un team",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Test Team Da Eliminare\",\r\n  \"descrizione\": \"Riusciremo?\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/teams",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "teams"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Visualizza le informazioni del tuo account",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/utente",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "utente"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{ACCESS_TOKEN}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "const loginRequest = {\r",
+              "        url: pm.variables.replaceIn(\"{{LOGIN_URL}}\"),\r",
+              "        method: \"POST\",\r",
+              "        header: {\r",
+              "            \"Content-Type\": \"application/json\"\r",
+              "        },\r",
+              "        body: {\r",
+              "            mode: \"raw\",\r",
+              "            raw: JSON.stringify({\r",
+              "                username: pm.variables.replaceIn(\"{{USER_USERNAME}}\"),\r",
+              "                password: pm.variables.replaceIn(\"{{USER_PASSWORD}}\")\r",
+              "            })\r",
+              "        }\r",
+              "    };\r",
+              "    \r",
+              "    pm.sendRequest(loginRequest, (error, response) => {\r",
+              "        if (error) {\r",
+              "            console.error(\"Errore durante il login:\", error);\r",
+              "            return;\r",
+              "        }\r",
+              "\r",
+              "        if (response.code === 200) {\r",
+              "            const json = response.json();\r",
+              "            \r",
+              "            pm.collectionVariables.set(\"ACCESS_TOKEN\", json.accessToken);\r",
+              "            console.log(\"Login OK, token salvato. Scade tra \" + (parseInt(json.expiration) / 60) + \" minuti.\");\r",
+              "        } else {\r",
+              "            console.error(\"Login fallito:\", response.status, response.text());\r",
+              "        }\r",
+              "    });"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Staff",
+      "item": [
+        {
+          "name": "Admin",
+          "item": [
+            {
+              "name": "Creazione STAFF (Vedi i Body)",
+              "item": [
+                {
+                  "name": "Registra un account Organizzatore",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"username\": \"organizzatore5\",\r\n    \"email\": \"organizzatore5@hackhub.it\",\r\n    \"password\": \"password\",\r\n    \"ruolo\": \"ORGANIZZATORE\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_AUTH_URL}}/register/staff",
+                      "host": [
+                        "{{BASE_AUTH_URL}}"
+                      ],
+                      "path": [
+                        "register",
+                        "staff"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Registra un account Giudice",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"username\": \"giudice3\",\r\n    \"email\": \"giudice3@hackhub.it\",\r\n    \"password\": \"password\",\r\n    \"ruolo\": \"GIUDICE\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_AUTH_URL}}/register/staff",
+                      "host": [
+                        "{{BASE_AUTH_URL}}"
+                      ],
+                      "path": [
+                        "register",
+                        "staff"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Registra un account Admin",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"username\": \"adm.andrea.polini\",\r\n    \"email\": \"andrea.polini@adm.hackhub.it\",\r\n    \"password\": \"password\",\r\n    \"ruolo\": \"ADMIN\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_AUTH_URL}}/register/staff",
+                      "host": [
+                        "{{BASE_AUTH_URL}}"
+                      ],
+                      "path": [
+                        "register",
+                        "staff"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Registra un account Mentore",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"username\": \"mentore10\",\r\n    \"email\": \"mentore10@hackhub.it\",\r\n    \"password\": \"password\",\r\n    \"ruolo\": \"MENTORE\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_AUTH_URL}}/register/staff",
+                      "host": [
+                        "{{BASE_AUTH_URL}}"
+                      ],
+                      "path": [
+                        "register",
+                        "staff"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "CREA un account STAFF (Modificare nel Body)",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"username\": \"\",\r\n    \"email\": \"\",\r\n    \"password\": \"\",\r\n    \"ruolo\": \"\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_AUTH_URL}}/register/staff",
+                      "host": [
+                        "{{BASE_AUTH_URL}}"
+                      ],
+                      "path": [
+                        "register",
+                        "staff"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Visualizza Accounts",
+              "item": [
+                {
+                  "name": "Visualizza tutti GIUDICI",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BASE_URL}}/staffs/giudici",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "staffs",
+                        "giudici"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Visualizza tutti ADMIN",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}/staffs/admins",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "staffs",
+                        "admins"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Visualizza tutti MENTORI",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}/staffs/mentori",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "staffs",
+                        "mentori"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Visualizza tutti STAFF e UTENTI",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BASE_AUTH_URL}}/accounts",
+                      "host": [
+                        "{{BASE_AUTH_URL}}"
+                      ],
+                      "path": [
+                        "accounts"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Visualizza tutti i TEAM",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/teams",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "teams"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Richieste HTTP di un amministratore di sistema della piattaforma.",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{ACCESS_TOKEN}}",
+                "type": "string"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "const loginRequest = {\r",
+                  "        url: pm.variables.replaceIn(\"{{LOGIN_URL}}\"),\r",
+                  "        method: \"POST\",\r",
+                  "        header: {\r",
+                  "            \"Content-Type\": \"application/json\"\r",
+                  "        },\r",
+                  "        body: {\r",
+                  "            mode: \"raw\",\r",
+                  "            raw: JSON.stringify({\r",
+                  "                username: pm.variables.replaceIn(\"{{ADMIN_USERNAME}}\"),\r",
+                  "                password: pm.variables.replaceIn(\"{{ADMIN_PASSWORD}}\")\r",
+                  "            })\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.sendRequest(loginRequest, (error, response) => {\r",
+                  "        if (error) {\r",
+                  "            console.error(\"Errore durante il login:\", error);\r",
+                  "            return;\r",
+                  "        }\r",
+                  "\r",
+                  "        if (response.code === 200) {\r",
+                  "            const json = response.json();\r",
+                  "\r",
+                  "            pm.collectionVariables.set(\"ACCESS_TOKEN\", json.accessToken);\r",
+                  "            console.log(\"Login OK, token salvato. Scade tra \" + (parseInt(json.expiration) / 60) + \" minuti.\");\r",
+                  "        } else {\r",
+                  "            console.error(\"Login fallito:\", response.status, response.text());\r",
+                  "        }\r",
+                  "    });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Organizzatore",
+          "item": [
+            {
+              "name": "Hackathon",
+              "item": [
+                {
+                  "name": "Cambia Stato",
+                  "item": [
+                    {
+                      "name": "Apri Iscrizioni Hackathon",
+                      "request": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json",
+                            "type": "text"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": ""
+                        },
+                        "url": {
+                          "raw": "{{BASE_URL}}/hackathons/1/apri-iscrizioni",
+                          "host": [
+                            "{{BASE_URL}}"
+                          ],
+                          "path": [
+                            "hackathons",
+                            "1",
+                            "apri-iscrizioni"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Avvia Hackathon",
+                      "request": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json",
+                            "type": "text"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": ""
+                        },
+                        "url": {
+                          "raw": "{{BASE_URL}}/hackathons/1/avvia",
+                          "host": [
+                            "{{BASE_URL}}"
+                          ],
+                          "path": [
+                            "hackathons",
+                            "1",
+                            "avvia"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Avvia Valutazione",
+                      "request": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json",
+                            "type": "text"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{BASE_URL}}/hackathons/1/avvia-valutazione",
+                          "host": [
+                            "{{BASE_URL}}"
+                          ],
+                          "path": [
+                            "hackathons",
+                            "1",
+                            "avvia-valutazione"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Segnalazione",
+                  "item": [
+                    {
+                      "name": "Visualizza Segnalazioni del Team",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json",
+                            "type": "text"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n  \"dataOra\": \"02/06/2026 09:30\"\r\n}"
+                        },
+                        "url": {
+                          "raw": "{{BASE_URL}}/segnalazioni/team/2",
+                          "host": [
+                            "{{BASE_URL}}"
+                          ],
+                          "path": [
+                            "segnalazioni",
+                            "team",
+                            "2"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Visualizzazione Segnalazioni degli hackathon organizzati",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json",
+                            "type": "text"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n  \"dataOra\": \"02/06/2026 09:30\"\r\n}"
+                        },
+                        "url": {
+                          "raw": "{{BASE_URL}}/segnalazioni",
+                          "host": [
+                            "{{BASE_URL}}"
+                          ],
+                          "path": [
+                            "segnalazioni"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                },
+                {
+                  "name": "CREA un nuovo HACKATHON (Modificare nel Body)",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"nome\": \"Test Lista Hackathon Assegnati2\",\r\n  \"descrizione\": \"Proviamo Lista Hackathon Assegnati.\",\r\n  \"regolamento\": \"1. Essere sveglio.\",\r\n  \"dataInizio\": \"02/05/2026 09:30\",\r\n  \"dataFine\": \"01/09/2026 09:30\",\r\n  \"dataScadenzaIscrizioni\": \"01/05/2026 09:00\",\r\n  \"luogo\": \"Nell'editor IntelliJ e Postman\",\r\n  \"premioDenaro\": 1000,\r\n  \"dimMaxTeam\": 10,\r\n  \"giudiceId\": 7\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/hackathons",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "hackathons"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Aggiungi un MENTORE ad un Hackathon",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/hackathons/1/mentore/add/12",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "hackathons",
+                        "1",
+                        "mentore",
+                        "add",
+                        "12"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Rimuovi Mentore",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/hackathons/1/mentori/remove/4",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "hackathons",
+                        "1",
+                        "mentori",
+                        "remove",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Proclama Vincitore",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"id\": 1\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/hackathons/1/proclama-vincitore",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "hackathons",
+                        "1",
+                        "proclama-vincitore"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Visualizza tutti gli Hackathon che organizzi",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BASE_URL}}/staffs/hackathons",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "staffs",
+                        "hackathons"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Paga il Vincitore",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"id\": 1\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/hackathons/1/paga-vincitore",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "hackathons",
+                        "1",
+                        "paga-vincitore"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Lista tutti i GIUDICI",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/staffs/giudici",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "staffs",
+                    "giudici"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Lista tutti i MENTORI",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/staffs/mentori",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "staffs",
+                    "mentori"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{ACCESS_TOKEN}}",
+                "type": "string"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "\r",
+                  "const loginRequest = {\r",
+                  "        url: pm.variables.replaceIn(\"{{LOGIN_URL}}\"),\r",
+                  "        method: \"POST\",\r",
+                  "        header: {\r",
+                  "            \"Content-Type\": \"application/json\"\r",
+                  "        },\r",
+                  "        body: {\r",
+                  "            mode: \"raw\",\r",
+                  "            raw: JSON.stringify({\r",
+                  "                username: pm.variables.replaceIn(\"{{ORGANIZZATORE_USERNAME}}\"),\r",
+                  "                password: pm.variables.replaceIn(\"{{ORGANIZZATORE_PASSWORD}}\")\r",
+                  "            })\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.sendRequest(loginRequest, (error, response) => {\r",
+                  "        if (error) {\r",
+                  "            console.error(\"Errore durante il login:\", error);\r",
+                  "            return;\r",
+                  "        }\r",
+                  "\r",
+                  "        if (response.code === 200) {\r",
+                  "            const json = response.json();\r",
+                  "\r",
+                  "            pm.collectionVariables.set(\"ACCESS_TOKEN\", json.accessToken);\r",
+                  "            console.log(\"Login OK, token salvato. Scade tra \" + (parseInt(json.expiration) / 60) + \" minuti.\");\r",
+                  "        } else {\r",
+                  "            console.error(\"Login fallito:\", response.status, response.text());\r",
+                  "        }\r",
+                  "    });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Giudice",
+          "item": [
+            {
+              "name": "Sottomissione",
+              "item": [
+                {
+                  "name": "Valuta sottomissione",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"punteggio\": 10,\r\n  \"giudizio\": \"Ben detto! (Giudizio Modificato)\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/sottomissioni/1/valuta",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "sottomissioni",
+                        "1",
+                        "valuta"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Visualizza sottomissioni di hackathon a cui sei assegnato",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}/staffs/sottomissioni",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "staffs",
+                        "sottomissioni"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Hackathon",
+              "item": [
+                {
+                  "name": "Concludi Valutazione",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BASE_URL}}/hackathons/1/concludi-valutazione",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "hackathons",
+                        "1",
+                        "concludi-valutazione"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Visualizza tutti gli Hackathon dove giudichi",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/staffs/hackathons",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "staffs",
+                    "hackathons"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{ACCESS_TOKEN}}",
+                "type": "string"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "\r",
+                  "const loginRequest = {\r",
+                  "        url: pm.variables.replaceIn(\"{{LOGIN_URL}}\"),\r",
+                  "        method: \"POST\",\r",
+                  "        header: {\r",
+                  "            \"Content-Type\": \"application/json\"\r",
+                  "        },\r",
+                  "        body: {\r",
+                  "            mode: \"raw\",\r",
+                  "            raw: JSON.stringify({\r",
+                  "                username: pm.variables.replaceIn(\"{{GIUDICE_USERNAME}}\"),\r",
+                  "                password: pm.variables.replaceIn(\"{{GIUDICE_PASSWORD}}\")\r",
+                  "            })\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.sendRequest(loginRequest, (error, response) => {\r",
+                  "        if (error) {\r",
+                  "            console.error(\"Errore durante il login:\", error);\r",
+                  "            return;\r",
+                  "        }\r",
+                  "\r",
+                  "        if (response.code === 200) {\r",
+                  "            const json = response.json();\r",
+                  "            pm.collectionVariables.set(\"ACCESS_TOKEN\", json.accessToken);\r",
+                  "            \r",
+                  "            console.log(\"Login OK, token salvato. Scade tra \" + (parseInt(json.expiration) / 60) + \" minuti.\");\r",
+                  "        } else {\r",
+                  "            console.error(\"Login fallito:\", response.status, response.text());\r",
+                  "        }\r",
+                  "    });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mentore",
+          "item": [
+            {
+              "name": "Segnalazione/Supporto",
+              "item": [
+                {
+                  "name": "Segnala Team",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "Usano l'AI."
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/segnalazioni/hackathon/1/team/2",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "segnalazioni",
+                        "hackathon",
+                        "1",
+                        "team",
+                        "2"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Visualizza Richieste di Supporto",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/richieste-supporto",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "richieste-supporto"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Prenta Call",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"dataOra\": \"02/06/2026 09:30\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/richieste-supporto/3/call",
+                      "host": [
+                        "{{BASE_URL}}"
+                      ],
+                      "path": [
+                        "richieste-supporto",
+                        "3",
+                        "call"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Visualizza Hackathon assegnati a STAFF",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/staffs/hackathons",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "staffs",
+                    "hackathons"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Visualizza tutti gli Hackathon assegnati",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/staffs/hackathons",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "staffs",
+                    "hackathons"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{ACCESS_TOKEN}}",
+                "type": "string"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "\r",
+                  "const loginRequest = {\r",
+                  "        url: pm.variables.replaceIn(\"{{LOGIN_URL}}\"),\r",
+                  "        method: \"POST\",\r",
+                  "        header: {\r",
+                  "            \"Content-Type\": \"application/json\"\r",
+                  "        },\r",
+                  "        body: {\r",
+                  "            mode: \"raw\",\r",
+                  "            raw: JSON.stringify({\r",
+                  "                username: pm.variables.replaceIn(\"{{MENTORE_USERNAME}}\"),\r",
+                  "                password: pm.variables.replaceIn(\"{{MENTORE_PASSWORD}}\")\r",
+                  "            })\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.sendRequest(loginRequest, (error, response) => {\r",
+                  "        if (error) {\r",
+                  "            console.error(\"Errore durante il login:\", error);\r",
+                  "            return;\r",
+                  "        }\r",
+                  "\r",
+                  "        if (response.code === 200) {\r",
+                  "            const json = response.json();\r",
+                  "            pm.collectionVariables.set(\"ACCESS_TOKEN\", json.accessToken);\r",
+                  "            console.log(\"Login OK, token salvato. Scade tra \" + (parseInt(json.expiration) / 60) + \" minuti.\");\r",
+                  "        } else {\r",
+                  "            console.error(\"Login fallito:\", response.status, response.text());\r",
+                  "        }\r",
+                  "    });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Richieste HTTP di una staffer della piattaforma. (Incluso ADMIN il ruolo supremo.)"
+    },
+    {
+      "name": "Guest",
+      "item": [
+        {
+          "name": "Lista tutti gli hackathons",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/hackathons",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "hackathons"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Visualizza i vincitori dell'hackathon",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id\": 1\r\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/hackathons/1/team-vincitore",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "hackathons",
+                "1",
+                "team-vincitore"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Visualizza hackathon",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/hackathons/1",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "hackathons",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registra",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"utente15\",\r\n    \"email\": \"utente15@email.it\",\r\n    \"password\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{REGISTER_UTENTE_URL}}",
+              "host": [
+                "{{REGISTER_UTENTE_URL}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accedi",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}"
+            },
+            "url": {
+              "raw": "{{LOGIN_URL}}",
+              "host": [
+                "{{LOGIN_URL}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": ""
+    },
+    {
+      "key": "BASE_AUTH_URL",
+      "value": ""
+    },
+    {
+      "key": "REGISTER_UTENTE_URL",
+      "value": ""
+    },
+    {
+      "key": "LOGIN_URL",
+      "value": ""
+    },
+    {
+      "key": "ADMIN_USERNAME",
+      "value": ""
+    },
+    {
+      "key": "ADMIN_PASSWORD",
+      "value": ""
+    },
+    {
+      "key": "USER_USERNAME",
+      "value": ""
+    },
+    {
+      "key": "USER_PASSWORD",
+      "value": ""
+    },
+    {
+      "key": "ORGANIZZATORE_USERNAME",
+      "value": ""
+    },
+    {
+      "key": "ORGANIZZATORE_PASSWORD",
+      "value": ""
+    },
+    {
+      "key": "GIUDICE_USERNAME",
+      "value": ""
+    },
+    {
+      "key": "GIUDICE_PASSWORD",
+      "value": ""
+    },
+    {
+      "key": "MENTORE_USERNAME",
+      "value": ""
+    },
+    {
+      "key": "MENTORE_PASSWORD",
+      "value": ""
+    },
+    {
+      "key": "ACCESS_TOKEN",
+      "value": ""
+    }
+  ]
+}
